@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('xuebadi', {
   ocrImage:          p   => ipcRenderer.invoke('ocr-image', p),
   selectImage:       ()   => ipcRenderer.invoke('select-image'),
   readImageBase64:   p   => ipcRenderer.invoke('read-image-base64', p),
+  saveImageBase64:   (p, d) => ipcRenderer.invoke('save-image-base64', p, d),
   chat:              (msgs, img) => ipcRenderer.invoke('chat', msgs, img),
   onServerStatus:    cb  => ipcRenderer.on('server-status', (_, d) => cb(d)),
 });
