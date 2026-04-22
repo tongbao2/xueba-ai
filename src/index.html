@@ -713,15 +713,15 @@ async function onFileInput(e) {
 
   for (const f of files) {
     const tmp = '/tmp/_xuebadi_ocr_' + Date.now() + '_' + f.name.replace(/\s/g,'_');
-    // copy file to tmp
+    // Read file as base64
     const b64 = await new Promise(resolve => {
       const fr = new FileReader();
       fr.onload = () => resolve(fr.result.split(',')[1]);
       fr.readAsDataURL(f);
     });
 
-    // save tmp
-    await xuebadi.readImageBase64(tmp); // no-op, just using it
+    // Save to temp file for OCR
+    await xuebadi.saveImageBase64(tmp, b64);
 
     pendingImages.push({ path: tmp, b64, name: f.name });
     addImageThumb(tmp, f.name);
