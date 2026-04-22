@@ -53,7 +53,13 @@ function startLlamaServer() {
     '-ngl', '0', '-c', '4096', '-t', '4',
   ];
   console.log('[学霸帝] Launching:', bin, args.join(' '));
-  llamaServer = spawn(bin, args, { stdio: ['ignore', 'pipe', 'pipe'] });
+  const libDir = app.isPackaged
+    ? path.join(process.resourcesPath, 'lib')
+    : path.join(app.getPath('home'), '.xuebadi-ai', 'lib');
+  const env = Object.assign({}, process.env, {
+    DYLD_LIBRARY_PATH: libDir + (process.env.DYLD_LIBRARY_PATH ? ':' + process.env.DYLD_LIBRARY_PATH : ''),
+  });
+  llamaServer = spawn(bin, args, { stdio: ['ignore', 'pipe', 'pipe'], env });
   llamaServer.stdout.on('data', d => {
     const m = d.toString();
     if (m.includes('listening')) { serverReady = true; notifyReady(); }
