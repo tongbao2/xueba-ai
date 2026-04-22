@@ -83,7 +83,11 @@ function stopLlamaServer() {
 
 function doOcr(imagePath) {
   return new Promise(resolve => {
-    execFile(getOcrPath(), [imagePath], { timeout: 30000 }, (err, stdout) => {
+    const ocrPath = getOcrPath();
+    console.log('[OCR] Path:', ocrPath, 'Image:', imagePath);
+    console.log('[OCR] Exists:', fs.existsSync(ocrPath), fs.existsSync(imagePath));
+    execFile(ocrPath, [imagePath], { timeout: 30000 }, (err, stdout, stderr) => {
+      console.log('[OCR] Result:', err ? err.message : 'OK', 'stdout:', stdout.slice(0,100), 'stderr:', stderr);
       resolve({ success: !err, text: err ? `OCR失败: ${err.message}` : stdout.trim() });
     });
   });
@@ -150,6 +154,9 @@ ipcMain.handle('select-image', async () => {
 });
 ipcMain.handle('read-image-base64', (_, p) => {
   try { return fs.readFileSync(p).toString('base64'); } catch { return null; }
+});
+ipcMain.handle('save-image-base64', (_, p, data) => {
+  try { fs.writeFileSync(p, Buffer.from(data, 'base64')); return true; } catch(e) { console.error('Save image error:', e); return false; }
 });
 ipcMain.handle('chat', (_, messages, imgB64) => doChat(messages, imgB64));
 
