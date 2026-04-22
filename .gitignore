@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.DS_Store
+*.dmg
+*.blockmap
+bin/llama-server
+ocr-helper/ocr-helper
