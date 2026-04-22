@@ -33,6 +33,11 @@
     },
     "extraResources": [
       {
+        "from": "lib",
+        "to": "lib",
+        "filter": ["**/*"]
+      },
+      {
         "from": "bin",
         "to": "bin",
         "filter": ["**/*"]
